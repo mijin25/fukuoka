@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>후쿠오카 3박 4일</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <style>
     :root {
       color-scheme: light dark;
@@ -130,6 +131,11 @@
       transition: background .2s;
     }
     .theme-toggle:active { background: rgba(255,255,255,.35); }
+    .theme-toggle .material-symbols-outlined {
+      font-size: 20px;
+      color: #e3e3e3;
+      line-height: 1;
+    }
     .theme-icon-light { display: none; }
     .theme-icon-dark  { display: block; }
     html.dark .theme-icon-light { display: block; }
@@ -460,8 +466,8 @@
       <span>👨‍👩‍👧‍👦 가족 여행</span>
     </div>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="다크/라이트 모드 전환">
-      <span class="theme-icon-light">☀️</span>
-      <span class="theme-icon-dark">🌙</span>
+      <span class="material-symbols-outlined theme-icon-light">light_mode</span>
+      <span class="material-symbols-outlined theme-icon-dark">dark_mode</span>
     </button>
   </div>
 </div>

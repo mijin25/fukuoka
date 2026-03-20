@@ -32,56 +32,68 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── Hero (dark map-like) ─── */
+    /* ─── Hero (ticket) ─── */
     .hero {
-      background: var(--bg);
-      padding: 28px 24px 56px;
+      background: var(--accent);
+      padding: 32px 28px 48px;
       position: relative;
-      overflow: hidden;
     }
-    .hero::before {
+    /* 점선 티켓 분리선 */
+    .hero::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(232,98,58,.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 20% 70%, rgba(34,197,94,.08) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .hero-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.4);
-      margin-bottom: 12px;
+      bottom: 20px;
+      left: 0; right: 0;
+      border-top: 2px dashed rgba(255,255,255,.25);
     }
     .hero-route {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
+      justify-content: space-between;
+      margin-bottom: 20px;
     }
+    .hero-airport {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-airport.right { text-align: right; }
     .hero-city {
-      font-size: 2rem;
+      font-size: 2.6rem;
       font-weight: 800;
       color: #fff;
       letter-spacing: -1px;
       line-height: 1;
     }
-    .hero-arrow {
-      color: var(--accent);
-      font-size: 1.2rem;
-      flex-shrink: 0;
+    .hero-cityname {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,.6);
+      font-weight: 500;
+    }
+    .hero-plane {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255,255,255,.5);
+    }
+    .hero-plane-icon {
+      font-size: 1.4rem;
+      color: #fff;
+    }
+    .hero-plane-line {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,.3);
     }
     .hero-sub {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,.4);
-      margin-top: 10px;
       display: flex;
-      gap: 16px;
+      gap: 20px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,.7);
+      font-weight: 500;
     }
-    .hero-sub span { display: flex; align-items: center; gap: 4px; }
+    .hero-sub span { display: flex; align-items: center; gap: 5px; }
 
     /* ─── Sheet ─── */
     .sheet {
@@ -326,7 +338,7 @@
     /* ─── Summary ─── */
     .summary {
       margin: 24px 24px 0;
-      background: var(--bg);
+      background: var(--accent);
       border-radius: 14px;
       padding: 20px;
       color: #fff;
@@ -336,12 +348,12 @@
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: rgba(255,255,255,.35);
+      color: rgba(255,255,255,.6);
       margin-bottom: 14px;
     }
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .sg-label { font-size: 0.65rem; color: rgba(255,255,255,.35); margin-bottom: 3px; }
-    .sg-val { font-size: 0.82rem; font-weight: 700; }
+    .sg-label { font-size: 0.65rem; color: rgba(255,255,255,.6); margin-bottom: 3px; }
+    .sg-val { font-size: 0.9rem; font-weight: 700; }
 
     /* ─── Footer ─── */
     footer {
@@ -369,12 +381,22 @@
 <!-- ─── Hero ─── -->
 <div class="hero">
   <div class="hero-route">
-    <div class="hero-city">ICN</div>
-    <div class="hero-arrow">→</div>
-    <div class="hero-city">FUK</div>
+    <div class="hero-airport">
+      <div class="hero-city">ICN</div>
+      <div class="hero-cityname">인천</div>
+    </div>
+    <div class="hero-plane">
+      <div class="hero-plane-line"></div>
+      <div class="hero-plane-icon">✈</div>
+      <div class="hero-plane-line"></div>
+    </div>
+    <div class="hero-airport right">
+      <div class="hero-city">FUK</div>
+      <div class="hero-cityname">후쿠오카</div>
+    </div>
   </div>
   <div class="hero-sub">
-    <span>✈ 3박 4일</span>
+    <span>3박 4일</span>
     <span>👨‍👩‍👧‍👦 가족 여행</span>
   </div>
 </div>

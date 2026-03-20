@@ -117,20 +117,15 @@
     }
     .hero-sub span { display: flex; align-items: center; gap: 5px; }
     .theme-toggle {
-      background: rgba(255,255,255,.2);
+      background: none;
       border: none;
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1rem;
       flex-shrink: 0;
-      transition: background .2s;
+      padding: 4px;
     }
-    .theme-toggle:active { background: rgba(255,255,255,.35); }
     .theme-toggle .material-symbols-outlined {
       font-size: 20px;
       color: #e3e3e3;
@@ -233,11 +228,11 @@
     }
 
     /* ─── Row (Flighty-style list) ─── */
-    .rows { padding: 0 24px; }
+    .rows { padding: 0 16px; }
     .row {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
+      gap: 10px;
       padding: 12px 0;
       border-bottom: 1px solid var(--line);
       position: relative;
@@ -246,7 +241,7 @@
 
     /* time column */
     .row-time {
-      min-width: 44px;
+      min-width: 36px;
       font-size: 0.82rem;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
@@ -962,9 +957,9 @@
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
   }
 
-  // 저장된 테마 복원
+  // 저장된 테마 복원 (기본: 라이트)
   const saved = localStorage.getItem('theme');
-  if (saved) document.documentElement.classList.add(saved);
+  document.documentElement.classList.add(saved || 'light');
 </script>
 </body>
 </html>

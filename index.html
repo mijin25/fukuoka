@@ -6,16 +6,32 @@
   <title>후쿠오카 3박 4일</title>
   <style>
     :root {
-      --bg:      #0d1117;
+      color-scheme: light dark;
+
+      /* Light mode (default) */
+      --bg:      #f5f4f2;
       --surface: #ffffff;
-      --sheet:   #f7f6f4;
+      --sheet:   #f0efed;
       --ink:     #111111;
-      --ink-2:   #666666;
+      --ink-2:   #555555;
       --ink-3:   #aaaaaa;
-      --line:    #ebebeb;
+      --line:    #e5e4e2;
       --accent:  #e8392a;
-      --green:   #22c55e;
+      --green:   #16a34a;
       --r: 20px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:      #111110;
+        --surface: #1c1b19;
+        --sheet:   #252320;
+        --ink:     #f0ede8;
+        --ink-2:   #8a8784;
+        --ink-3:   #55524f;
+        --line:    #2e2b28;
+        --green:   #22c55e;
+      }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -364,15 +380,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-      :root {
-        --surface: #1a1a1a;
-        --sheet:   #222222;
-        --ink:     #f0ede8;
-        --ink-2:   #888680;
-        --ink-3:   #555250;
-        --line:    #2e2c2a;
-      }
-      .bus-table th { background: #333; }
+      .bus-table th { background: #333330; }
     }
   </style>
 </head>

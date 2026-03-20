@@ -13,15 +13,18 @@
       --ink-2:   #666666;
       --ink-3:   #aaaaaa;
       --line:    #ebebeb;
-      --accent:  #e8623a;
+      --accent:  #e8392a;
       --green:   #22c55e;
       --r: 20px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { font-size: 16px; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                   'Segoe UI', 'Helvetica Neue', Arial,
                    'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: var(--bg);
       color: var(--ink);
@@ -116,7 +119,7 @@
       transition: border-color .15s, color .15s;
     }
     .tab-day {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       font-weight: 700;
       letter-spacing: .5px;
       color: var(--ink-3);
@@ -124,7 +127,7 @@
       margin-bottom: 2px;
     }
     .tab-title {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--ink-3);
       white-space: nowrap;
@@ -152,7 +155,7 @@
       margin-bottom: 4px;
     }
     .day-banner h2 {
-      font-size: 1.15rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -.3px;
@@ -184,7 +187,7 @@
     /* time column */
     .row-time {
       min-width: 44px;
-      font-size: 0.75rem;
+      font-size: 0.82rem;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       color: var(--ink-3);
@@ -208,13 +211,13 @@
     /* body */
     .row-body { flex: 1; }
     .row-title {
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--ink);
       line-height: 1.3;
     }
     .row-desc {
-      font-size: 0.78rem;
+      font-size: 0.875rem;
       color: var(--ink-2);
       margin-top: 3px;
       line-height: 1.55;
@@ -226,7 +229,7 @@
       display: flex;
       align-items: baseline;
       gap: 7px;
-      font-size: 0.79rem;
+      font-size: 0.875rem;
       color: var(--ink-2);
       line-height: 1.5;
     }
@@ -246,7 +249,7 @@
       padding: 10px 12px;
       background: var(--sheet);
       border-radius: 10px;
-      font-size: 0.77rem;
+      font-size: 0.875rem;
       color: var(--ink-2);
       line-height: 1.6;
       border-left: 3px solid var(--accent);
@@ -273,7 +276,7 @@
       align-items: baseline;
       padding: 5px 0;
       border-bottom: 1px solid var(--line);
-      font-size: 0.78rem;
+      font-size: 0.875rem;
       color: var(--ink-2);
     }
     .tt-row:last-child { border-bottom: none; }
@@ -281,7 +284,7 @@
       min-width: 42px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
-      font-size: 0.73rem;
+      font-size: 0.82rem;
       color: var(--ink-3);
       flex-shrink: 0;
     }
@@ -302,14 +305,14 @@
 
     /* ─── Bus table ─── */
     .bus-wrap { margin-top: 10px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
-    .bus-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .bus-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .bus-table th {
       background: var(--ink);
       color: #fff;
       padding: 7px 10px;
       text-align: left;
       font-weight: 600;
-      font-size: 0.68rem;
+      font-size: 0.75rem;
       letter-spacing: .3px;
     }
     .bus-table td {
@@ -365,7 +368,6 @@
 
 <!-- ─── Hero ─── -->
 <div class="hero">
-  <div class="hero-label">여행 일정</div>
   <div class="hero-route">
     <div class="hero-city">ICN</div>
     <div class="hero-arrow">→</div>
@@ -373,7 +375,7 @@
   </div>
   <div class="hero-sub">
     <span>✈ 3박 4일</span>
-    <span>🏨 더 랑 호텔 하카타</span>
+    <span>👨‍👩‍👧‍👦 가족 여행</span>
   </div>
 </div>
 

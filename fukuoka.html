@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>후쿠오카 3박 4일</title>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --surface: #ffffff;
+      --sheet:   #f7f6f4;
+      --ink:     #111111;
+      --ink-2:   #666666;
+      --ink-3:   #aaaaaa;
+      --line:    #ebebeb;
+      --accent:  #e8623a;
+      --green:   #22c55e;
+      --r: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                   'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Hero (dark map-like) ─── */
+    .hero {
+      background: var(--bg);
+      padding: 28px 24px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(232,98,58,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 70%, rgba(34,197,94,.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 12px;
+    }
+    .hero-route {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .hero-city {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .hero-arrow {
+      color: var(--accent);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .hero-sub {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,.4);
+      margin-top: 10px;
+      display: flex;
+      gap: 16px;
+    }
+    .hero-sub span { display: flex; align-items: center; gap: 4px; }
+
+    /* ─── Sheet ─── */
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--r) var(--r) 0 0;
+      min-height: calc(100vh - 140px);
+      margin-top: -28px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ─── Tabs ─── */
+    .tabs {
+      display: flex;
+      padding: 0 6px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 99;
+      border-radius: var(--r) var(--r) 0 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: 1;
+      min-width: 72px;
+      padding: 14px 8px 12px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 2px solid transparent;
+      transition: border-color .15s, color .15s;
+    }
+    .tab-day {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .tab-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-3);
+      white-space: nowrap;
+    }
+    .tab.active { border-bottom-color: var(--accent); }
+    .tab.active .tab-day,
+    .tab.active .tab-title { color: var(--accent); }
+
+    /* ─── Content ─── */
+    .content { padding: 0 0 48px; }
+    .day-section { display: none; }
+    .day-section.active { display: block; }
+
+    /* ─── Day banner ─── */
+    .day-banner {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .day-banner .d-tag {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .day-banner h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.3px;
+      line-height: 1.25;
+    }
+
+    /* ─── Section header ─── */
+    .sec {
+      padding: 18px 24px 8px;
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    /* ─── Row (Flighty-style list) ─── */
+    .rows { padding: 0 24px; }
+    .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    .row:last-child { border-bottom: none; }
+
+    /* time column */
+    .row-time {
+      min-width: 44px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-3);
+      padding-top: 2px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .row-time.hi { color: var(--accent); }
+
+    /* dot */
+    .row-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .row-dot.hi { background: var(--accent); }
+
+    /* body */
+    .row-body { flex: 1; }
+    .row-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .row-desc {
+      font-size: 0.78rem;
+      color: var(--ink-2);
+      margin-top: 3px;
+      line-height: 1.55;
+    }
+
+    /* ─── Picks (맛집 추천) ─── */
+    .picks { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .pick {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-size: 0.79rem;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+    .pick-bullet {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+    .pick-bullet.dim { background: var(--line); }
+    .pick strong { color: var(--ink); font-weight: 700; }
+
+    /* ─── Info strip ─── */
+    .strip {
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      background: var(--sheet);
+      border-radius: 10px;
+      font-size: 0.77rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+      border-left: 3px solid var(--accent);
+    }
+    .strip.blue  { border-left-color: #3b82f6; }
+    .strip.green { border-left-color: var(--green); }
+    .strip.warn  { border-left-color: var(--ink-3); }
+    .strip b { display: block; color: var(--ink); font-weight: 700; margin-bottom: 2px; }
+
+    /* ─── Timetable ─── */
+    .timetable { margin-top: 10px; }
+    .tt-block {
+      margin: 0 24px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--sheet);
+    }
+    .tt-block .tt-row { padding: 8px 14px; }
+    .tt-block .tt-row:last-child { border-bottom: none; }
+    .tt-row {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.78rem;
+      color: var(--ink-2);
+    }
+    .tt-row:last-child { border-bottom: none; }
+    .tt-time {
+      min-width: 42px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.73rem;
+      color: var(--ink-3);
+      flex-shrink: 0;
+    }
+    .tt-row.hi .tt-time { color: var(--accent); }
+    .tt-row.hi .tt-label { color: var(--ink); font-weight: 600; }
+
+    /* ─── Tags ─── */
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 7px; }
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--sheet);
+      color: var(--ink-2);
+      border: 1px solid var(--line);
+    }
+
+    /* ─── Bus table ─── */
+    .bus-wrap { margin-top: 10px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+    .bus-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .bus-table th {
+      background: var(--ink);
+      color: #fff;
+      padding: 7px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.68rem;
+      letter-spacing: .3px;
+    }
+    .bus-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-2);
+      vertical-align: top;
+    }
+    .bus-table tr:last-child td { border-bottom: none; }
+
+    /* ─── Summary ─── */
+    .summary {
+      margin: 24px 24px 0;
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 20px;
+      color: #fff;
+    }
+    .summary-label {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 14px;
+    }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sg-label { font-size: 0.65rem; color: rgba(255,255,255,.35); margin-bottom: 3px; }
+    .sg-val { font-size: 0.82rem; font-weight: 700; }
+
+    /* ─── Footer ─── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.7rem;
+      color: var(--ink-3);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface: #1a1a1a;
+        --sheet:   #222222;
+        --ink:     #f0ede8;
+        --ink-2:   #888680;
+        --ink-3:   #555250;
+        --line:    #2e2c2a;
+      }
+      .bus-table th { background: #333; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Hero ─── -->
+<div class="hero">
+  <div class="hero-label">여행 일정</div>
+  <div class="hero-route">
+    <div class="hero-city">ICN</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-city">FUK</div>
+  </div>
+  <div class="hero-sub">
+    <span>✈ 3박 4일</span>
+    <span>🏨 더 랑 호텔 하카타</span>
+  </div>
+</div>
+
+<!-- ─── Sheet ─── -->
+<div class="sheet">
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabs">
+    <div class="tab active" onclick="go(0)">
+      <div class="tab-day">Day 1</div>
+      <div class="tab-title">하카타</div>
+    </div>
+    <div class="tab" onclick="go(1)">
+      <div class="tab-day">Day 2</div>
+      <div class="tab-title">유후인</div>
+    </div>
+    <div class="tab" onclick="go(2)">
+      <div class="tab-day">Day 3</div>
+      <div class="tab-title">텐진</div>
+    </div>
+    <div class="tab" onclick="go(3)">
+      <div class="tab-day">Day 4</div>
+      <div class="tab-title">귀국</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DAY 1 ══ -->
+    <div class="day-section active" id="d0">
+      <div class="day-banner">
+        <div class="d-tag">Day 1</div>
+        <h2>후쿠오카 도착 &amp; 하카타·캐널시티</h2>
+      </div>
+
+      <div class="sec">이동</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">03:30</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">방이동 출발</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time">07:15</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">인천공항 출발</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">08:55</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">후쿠오카 공항 도착</div>
+            <div class="row-desc">에스컬레이터 내려와 국제선 터미널 <strong>6·7번 승강장</strong> (로손 옆)<br>니시테츠 버스 → 하카타역행</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">아침식사</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">도착후</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">하카타역 지하 1층</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>오코노미야키 야키소바 카나가와</strong> — 명란 오코노미야키</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>신신라멘, 고등어 백반</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">짐 보관</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">10:00</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">더 랑 호텔 하카타</div>
+            <div class="row-desc">엘리베이터 앞 캐리어 보관소 셀프 보관 → QR로 메시지 전송</div>
+            <div class="strip">
+              <b>전송 내용</b>
+              예약 사이트 · 예약자 이름 · 인원수 · 체크인 시간 · 캐리어 사진
+            </div>
+            <div class="strip warn" style="margin-top:6px">
+              체크인 15:00–22:00 · 늦을 시 +1,000엔 · 숙박세 1인당 200엔 별도
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">오전</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">11:30</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">오호리 공원 산책</div>
+            <div class="row-desc">지하철 공항선 5개역 → 오호리코엔역 3번 출구 도보 2~3분</div>
+            <div class="tags"><span class="tag">무료 입장</span><span class="tag">산책</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">점심식사</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">점심</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">점심 선택</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>로지우라 베이커리</strong> — 멜론빵 추천</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>히로시마 오코노미야키 오카짱 / 마츠판</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span><strong>우오키치</strong> — 명란젓 무제한 정식</span></div>
+            </div>
+            <div class="strip warn" style="margin-top:8px">'가오가오 오호리점' 예약 마감 빠름 — 패스</div>
+            <div class="strip blue" style="margin-top:6px">한큐백화점 식당가도 맛있음 (공원 출발 전 점심 가능)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">오후</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">16:00</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">숙소 체크인 — 더 랑 호텔 하카타</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">17:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body"><div class="row-title">하카타역 주변 &amp; 캐널시티</div></div>
+        </div>
+      </div>
+
+      <div class="sec">캐널시티 분수쇼 — 무료</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">18:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">건담 분수쇼 — B1F Sun Plaza</div>
+            <div class="row-desc">약 10분 · 무료 관람 · 건담 분수쇼 19:00 / 21:00</div>
+          </div>
+        </div>
+      </div>
+      <div class="tt-block">
+        <div class="tt-row"><span class="tt-time">18:00</span><span class="tt-label">음악 분수</span></div>
+        <div class="tt-row"><span class="tt-time">18:30</span><span class="tt-label">음악 분수 ★</span></div>
+        <div class="tt-row hi"><span class="tt-time">19:00</span><span class="tt-label">건담 분수쇼</span></div>
+        <div class="tt-row"><span class="tt-time">19:30</span><span class="tt-label">음악 분수</span></div>
+        <div class="tt-row"><span class="tt-time">20:00</span><span class="tt-label">프로젝션 매핑 "Imagination"</span></div>
+        <div class="tt-row"><span class="tt-time">20:30</span><span class="tt-label">음악 분수 ★</span></div>
+        <div class="tt-row hi"><span class="tt-time">21:00</span><span class="tt-label">건담 분수쇼</span></div>
+        <div class="tt-row"><span class="tt-time">21:30</span><span class="tt-label">음악 분수</span></div>
+        <div class="tt-row"><span class="tt-time">22:00</span><span class="tt-label">마지막 분수쇼</span></div>
+      </div>
+      <div class="rows">
+        <div class="row" style="border-bottom:none">
+          <div class="row-time"></div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="strip green">
+              <b>관람 팁</b>
+              B1 분수 앞 → 몰입감 최고<br>
+              2~3층 난간 → 전체 영상 촬영<br>
+              10분 전 도착 추천
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">저녁 &amp; 야식</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">저녁</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">하카타역 근처</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>하카타 기온 테츠나베</strong> — 명란젓 + 철판 교자</span></div>
+              <div class="pick"><div class="pick-bullet"></div><span><strong>무이치몬 하카타</strong> — 계란말이 + 꼬치 + 맥주</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>라쿠텐지 / 오오야마 — 모츠나베</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>사보리바 — 사케바</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /d0 -->
+
+
+    <!-- ══ DAY 2 ══ -->
+    <div class="day-section" id="d1">
+      <div class="day-banner">
+        <div class="d-tag">Day 2</div>
+        <h2>유후인 버스 투어 &amp; 미식</h2>
+      </div>
+
+      <div class="sec">투어 출발</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">08:20</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">집결</div>
+            <div class="row-desc">하카타역 치쿠시구치 오리엔탈호텔 1층 로손 앞</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">08:30</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">유후인 버스 투어 출발</div>
+            <div class="row-desc">쿠스 휴게소 경유</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">점심</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">유후인 거리 내 식당</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>쿠쿠치</strong> — 도라야키 &amp; 딸기모찌 간식 추천</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">이동 관광</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">14:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">유후다케</div>
+            <div class="row-desc">약 10~20분</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">15:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">벳푸 가마도 지옥</div>
+            <div class="row-desc">약 30분</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">16:30</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">다자이후 텐만구</div>
+            <div class="row-desc">약 1시간</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time">18:00</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">하카타역 도착 — 투어 종료</div></div>
+        </div>
+      </div>
+
+      <div class="sec">쇼핑 &amp; 저녁</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">18:30</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">로피아 마트 쇼핑</div>
+            <div class="row-desc">간식 및 기념품 구입</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">19:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">하카타역 주변 저녁식사</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>야키토리 하치베</strong> — 완두콩 꼬치 추천</span></div>
+              <div class="pick"><div class="pick-bullet"></div><span><strong>카와야</strong> — 교자 &amp; 꼬치</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span><strong>신타로 라멘</strong> — 돈코츠</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time">야식</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">로바타 신카와바시 / 아사야마</div>
+            <div class="row-desc">오코노미야키와 술 한잔</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /d1 -->
+
+
+    <!-- ══ DAY 3 ══ -->
+    <div class="day-section" id="d2">
+      <div class="day-banner">
+        <div class="d-tag">Day 3</div>
+        <h2>텐진 쇼핑 &amp; 모모치 해변 야경</h2>
+      </div>
+
+      <div class="strip blue" style="margin:16px 24px 0">
+        <b>이동</b>하카타역 → 텐진역 · 지하철 공항선 · 5정거장
+      </div>
+
+      <div class="sec">아침식사</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">08:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">텐진 아침</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>우오키치</strong> (솔라리아 스테이지 B2) — 명란젓·갓무침 무제한 생선구이 백반</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span><strong>카나가와</strong> — 오코노미야키·야키소바 브런치</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">오전 — 텐진 쇼핑</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time hi">오전</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body"><div class="row-title">텐진 지하상가 쇼핑</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">점심</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">점심 선택</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>텐진 쇼쿠도 하루키친</strong> — 가정식</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>파르코백화점 <strong>요시미</strong> — 덮밥</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>파르코 B1 <strong>우미노 쇼쿠도</strong></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">오후 — 빵지순례</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">오후</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">빵지순례</div>
+            <div class="row-desc">다고메카, 판스톡 텐진점 등</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">모모치 해변 &amp; 후쿠오카 타워</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">15:00</div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">텐진 → 모모치 버스</div>
+            <div class="strip blue" style="margin-top:8px">
+              <b>탑승 방법</b>
+              텐진역 7번 출구 앞 <strong>1A 버스정류장</strong><br>
+              302 · W1 · W2번 → '후쿠오카타워 미나미구치' 하차<br>
+              뒷문 탑승(후불) · 번호표 뽑고 탑승 · 하차 시 요금 확인 후 지불
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">저녁</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">모모치 해변 &amp; 후쿠오카 타워 야경</div>
+            <div class="tags"><span class="tag">야경 명소</span><span class="tag">해변 산책</span></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">저녁</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">저녁식사 &amp; 마무리</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span><strong>이케다센교 도진마치</strong> — 회 초밥</span></div>
+              <div class="pick"><div class="pick-bullet"></div><span><strong>야키토리 멜론</strong> — 꼬치</span></div>
+              <div class="pick"><div class="pick-bullet dim"></div><span>히토쿠치 교자 타케토라 / 타치노미 마타아시타</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">후쿠오카 타워 → 귀환 버스</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time"></div>
+          <div class="row-dot"></div>
+          <div class="row-body">
+            <div class="row-title">TNC 방송회관 앞 버스정류장</div>
+            <div class="bus-wrap">
+              <table class="bus-table">
+                <thead>
+                  <tr><th>방면</th><th>정류장</th><th>버스</th><th>소요</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>텐진</td><td>A</td><td>302·W2·W1·305</td><td rowspan="2">~20분</td></tr>
+                  <tr><td>텐진</td><td>B</td><td>302·W1</td></tr>
+                  <tr><td>하카타</td><td>A</td><td>312·306·139</td><td rowspan="2">~25분</td></tr>
+                  <tr><td>하카타</td><td>B</td><td>312·306</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /d2 -->
+
+
+    <!-- ══ DAY 4 ══ -->
+    <div class="day-section" id="d3">
+      <div class="day-banner">
+        <div class="d-tag">Day 4</div>
+        <h2>마지막 일정 &amp; 귀국</h2>
+      </div>
+
+      <div class="sec">귀국</div>
+      <div class="rows">
+        <div class="row">
+          <div class="row-time">07:00</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">호텔 체크아웃</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time">07:30</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">하카타역 → 공항선 탑승</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">08:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body">
+            <div class="row-title">후쿠오카 공항 수속 &amp; 면세점</div>
+            <div class="picks">
+              <div class="pick"><div class="pick-bullet"></div><span>로이스 초콜릿, 도코바나나 등</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-time hi">10:00</div>
+          <div class="row-dot hi"></div>
+          <div class="row-body"><div class="row-title">후쿠오카 출발 ✈</div></div>
+        </div>
+        <div class="row">
+          <div class="row-time">11:45</div>
+          <div class="row-dot"></div>
+          <div class="row-body"><div class="row-title">인천공항 도착</div></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-label">여행 요약</div>
+        <div class="summary-grid">
+          <div><div class="sg-label">기간</div><div class="sg-val">3박 4일</div></div>
+          <div><div class="sg-label">숙소</div><div class="sg-val">더 랑 호텔</div></div>
+          <div><div class="sg-label">Day 1</div><div class="sg-val">하카타·캐널시티</div></div>
+          <div><div class="sg-label">Day 2</div><div class="sg-val">유후인 투어</div></div>
+          <div><div class="sg-label">Day 3</div><div class="sg-val">텐진·모모치</div></div>
+          <div><div class="sg-label">Day 4</div><div class="sg-val">귀국</div></div>
+        </div>
+      </div>
+
+      <footer>즐거운 후쿠오카 여행 되세요</footer>
+    </div><!-- /d3 -->
+
+  </div><!-- /content -->
+</div><!-- /sheet -->
+
+<script>
+  function go(i) {
+    document.querySelectorAll('.day-section').forEach((el, j) => el.classList.toggle('active', i === j));
+    document.querySelectorAll('.tab').forEach((el, j) => el.classList.toggle('active', i === j));
+    document.querySelector('.sheet').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

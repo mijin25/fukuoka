@@ -155,7 +155,9 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      transition: border-radius .15s;
     }
+    .tabs.stuck { border-radius: 0; }
     .tabs::-webkit-scrollbar { display: none; }
     .tab {
       flex: 1;
@@ -465,6 +467,9 @@
 
 <!-- ─── Sheet ─── -->
 <div class="sheet">
+
+  <!-- Sentinel: tabs가 최상단에 붙으면 감지 -->
+  <div id="tabs-sentinel" style="height:1px;margin-top:-1px"></div>
 
   <!-- Tabs -->
   <div class="tabs" id="tabs">
@@ -952,6 +957,11 @@
     html.classList.add(isDark ? 'light' : 'dark');
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
   }
+
+  // 탭 stuck 감지 — 최상단 도달 시 라운드 제거
+  const sentinel = document.getElementById('tabs-sentinel');
+  const tabs = document.getElementById('tabs');
+  new IntersectionObserver(([e]) => tabs.classList.toggle('stuck', !e.isIntersecting)).observe(sentinel);
 
   // 저장된 테마 복원 (기본: 라이트)
   const saved = localStorage.getItem('theme');

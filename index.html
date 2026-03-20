@@ -102,14 +102,40 @@
       height: 1px;
       background: rgba(255,255,255,.3);
     }
+    .hero-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     .hero-sub {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       font-size: 0.78rem;
       color: rgba(255,255,255,.7);
       font-weight: 500;
     }
     .hero-sub span { display: flex; align-items: center; gap: 5px; }
+    .theme-toggle {
+      background: rgba(255,255,255,.2);
+      border: none;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+    .theme-toggle:active { background: rgba(255,255,255,.35); }
+    .theme-icon-light { display: none; }
+    .theme-icon-dark  { display: block; }
+    html.dark .theme-icon-light { display: block; }
+    html.dark .theme-icon-dark  { display: none; }
+    html.light .theme-icon-light { display: none; }
+    html.light .theme-icon-dark  { display: block; }
 
     /* ─── Sheet ─── */
     .sheet {
@@ -382,6 +408,31 @@
     @media (prefers-color-scheme: dark) {
       .bus-table th { background: #333330; }
     }
+
+    /* 수동 토글 — 시스템 설정 오버라이드 */
+    html.dark {
+      --bg:      #111110;
+      --surface: #1c1b19;
+      --sheet:   #252320;
+      --ink:     #f0ede8;
+      --ink-2:   #8a8784;
+      --ink-3:   #55524f;
+      --line:    #2e2b28;
+      --green:   #22c55e;
+    }
+    html.dark .bus-table th { background: #333330; }
+
+    html.light {
+      --bg:      #f5f4f2;
+      --surface: #ffffff;
+      --sheet:   #f0efed;
+      --ink:     #111111;
+      --ink-2:   #555555;
+      --ink-3:   #aaaaaa;
+      --line:    #e5e4e2;
+      --green:   #16a34a;
+    }
+    html.light .bus-table th { background: #111111; }
   </style>
 </head>
 <body>
@@ -403,9 +454,15 @@
       <div class="hero-cityname">후쿠오카</div>
     </div>
   </div>
-  <div class="hero-sub">
-    <span>3박 4일</span>
-    <span>👨‍👩‍👧‍👦 가족 여행</span>
+  <div class="hero-bottom">
+    <div class="hero-sub">
+      <span>3박 4일</span>
+      <span>👨‍👩‍👧‍👦 가족 여행</span>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="다크/라이트 모드 전환">
+      <span class="theme-icon-light">☀️</span>
+      <span class="theme-icon-dark">🌙</span>
+    </button>
   </div>
 </div>
 
@@ -889,6 +946,19 @@
     document.querySelectorAll('.tab').forEach((el, j) => el.classList.toggle('active', i === j));
     document.querySelector('.sheet').scrollIntoView({ behavior: 'smooth' });
   }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark') ||
+      (!html.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    html.classList.remove('dark', 'light');
+    html.classList.add(isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  // 저장된 테마 복원
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.classList.add(saved);
 </script>
 </body>
 </html>
